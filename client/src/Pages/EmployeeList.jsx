@@ -15,6 +15,9 @@ const deleteEmployee = (id) => {
 const EmployeeList = () => {
   const [loading, setLoading] = useState(true);
   const [employees, setEmployees] = useState(null);
+  const [filterInput, setFilterInput] = useState("");
+
+  const [inputPosOrLevel, setInputPosOrLevel] = useState("");
 
   const handleDelete = (id) => {
     deleteEmployee(id);
@@ -32,11 +35,37 @@ const EmployeeList = () => {
       })
   }, []);
 
+  const filterPosOrLevel = (employees, filterInput)=>{
+    const filteredEmployees = employees.filter(employee => {
+      return employee.level.toLowerCase().includes(filterInput) || employee.position.toLowerCase().includes(filterInput)
+    })
+    return filteredEmployees
+  }
+
+  const searchPosOrLevel = event => {
+    setInputPosOrLevel(event.target.value);
+    setFilterInput(event.target.value.toLowerCase());
+  }
+
   if (loading) {
     return <Loading />;
   }
 
-  return <EmployeeTable employees={employees} onDelete={handleDelete} />;
+  return (
+    <div>
+      <div className="filter">
+          <label >Filter Position or Level: </label>
+          <input
+            className="input"
+            type="text"
+            placeholder="Search Position or Level"
+            value={inputPosOrLevel}
+            onChange={searchPosOrLevel}
+          />
+      </div>
+      <EmployeeTable employees={filterPosOrLevel(employees, filterInput)} onDelete={handleDelete} />
+    </div>
+  );
 };
 
 export default EmployeeList;
