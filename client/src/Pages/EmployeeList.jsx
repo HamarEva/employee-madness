@@ -16,6 +16,7 @@ const EmployeeList = () => {
   const [loading, setLoading] = useState(true);
   const [employees, setEmployees] = useState(null);
   const [filterInput, setFilterInput] = useState("");
+  const [sortExpr, setSortExpr] = useState("none");
 
   const [inputPosOrLevel, setInputPosOrLevel] = useState("");
 
@@ -47,6 +48,32 @@ const EmployeeList = () => {
     setFilterInput(event.target.value.toLowerCase());
   }
 
+  const convertName = name => {
+    const names = name.split(" ")
+    const nameObject = {
+      first: names[0],
+      middle: names.slice(1, -1).join(" "),
+      last: names[names.length-1]
+    }
+    return nameObject
+  }
+
+  const sortBySelected = (employees, sortExpr)=>{
+    if (sortExpr === "none"){
+      return employees
+    } else if (sortExpr === "level" || sortExpr === "position"){
+      const sortedEmployees = [...employees].sort((a,b) => a[sortExpr].localeCompare(b[sortExpr]));
+      return sortedEmployees
+    } else {
+      const sortedEmployees = [...employees].sort((a,b) => convertName(a.name)[sortExpr].localeCompare(convertName(b.name)[sortExpr]))
+      return sortedEmployees
+    }
+  }
+
+  const sortEmployees = event => {
+    setSortExpr(event.target.value);
+  }
+
   if (loading) {
     return <Loading />;
   }
@@ -56,14 +83,24 @@ const EmployeeList = () => {
       <div className="filter">
           <label >Filter Position or Level: </label>
           <input
-            className="input"
             type="text"
             placeholder="Search Position or Level"
             value={inputPosOrLevel}
             onChange={searchPosOrLevel}
           />
       </div>
-      <EmployeeTable employees={filterPosOrLevel(employees, filterInput)} onDelete={handleDelete} />
+      <div className="sort">
+          <label >Sort Employees By: </label>
+          <select onChange={sortEmployees}>
+            <option value="none">None</option>
+            <option value="first">First name</option>
+            <option value="middle">Middle name</option>
+            <option value="last">Last name</option>
+            <option value="position">Position</option>
+            <option value="level">Level</option>
+          </select>
+      </div>
+      <EmployeeTable employees={sortBySelected(filterPosOrLevel(employees, filterInput), sortExpr)} onDelete={handleDelete} />
     </div>
   );
 };
