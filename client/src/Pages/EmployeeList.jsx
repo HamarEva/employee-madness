@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Loading from "../Components/Loading";
 import EmployeeTable from "../Components/EmployeeTable";
 
 const fetchEmployees = () => {
   return fetch("/api/employees").then((res) => res.json());
+};
+
+const fetchSearchEmployees = (search) => {
+  return fetch(`/api/employees/search/${search}`).then((res) => res.json())
 };
 
 const deleteEmployee = (id) => {
@@ -20,6 +25,8 @@ const EmployeeList = () => {
 
   const [inputPosOrLevel, setInputPosOrLevel] = useState("");
 
+  const { search } = useParams();
+
   const handleDelete = (id) => {
     deleteEmployee(id);
 
@@ -29,12 +36,21 @@ const EmployeeList = () => {
   };
 
   useEffect(() => {
-    fetchEmployees()
+    
+    if (search){
+      fetchSearchEmployees(search)
       .then((employees) => {
         setLoading(false);
         setEmployees(employees);
       })
-  }, []);
+    } else {
+      fetchEmployees()
+      .then((employees) => {
+        setLoading(false);
+        setEmployees(employees);
+      })
+    }
+  }, [search]);
 
   const filterPosOrLevel = (employees, filterInput)=>{
     const filteredEmployees = employees.filter(employee => {

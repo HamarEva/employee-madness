@@ -102,6 +102,18 @@ app.delete("/api/equipment/:id", async (req, res, next) => {
   }
 });
 
+app.get("/api/employees/search/:search", async (req, res) => {
+  const search = req.params.search;
+  const searchExpression = {
+    $or: [
+      { name: { $regex: new RegExp(search, "i") } }
+    ]
+  }
+  
+  const employees = await EmployeeModel.find(searchExpression);
+  return res.json(employees);
+});
+
 const main = async () => {
   await mongoose.connect(MONGO_URL);
 
