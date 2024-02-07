@@ -7,6 +7,10 @@ const EmployeeSchema = new Schema({
   name: String,
   level: String,
   position: String,
+  equipment: {
+    type: String,
+    default: "none",
+  },
   created: {
     type: Date,
     default: Date.now,

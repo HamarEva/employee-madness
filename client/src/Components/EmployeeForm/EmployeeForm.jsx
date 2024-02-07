@@ -1,19 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const fetchEquipment = () => {
+  return fetch("/api/equipment").then((res) => res.json());
+};
 
 const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
   const [name, setName] = useState(employee?.name ?? "");
   const [level, setLevel] = useState(employee?.level ?? "");
-  const [position, setPosition] = useState(employee?.position ?? "");
+  const [position, setPosition] = useState(employee?.position ?? "none");
+  const [equipment, setEquipment] = useState(employee?.equipment ?? "none");
+  const [options, setOptions] = useState([]);
+  
+  useEffect(() => {
+    
+    fetchEquipment()
+    .then((equipment) => {
+      setOptions(equipment)
+    })
+  
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
-
+    console.log(equipment);
     if (employee) {
       return onSave({
         ...employee,
         name,
         level,
         position,
+        equipment
       });
     }
 
@@ -21,6 +37,7 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
       name,
       level,
       position,
+      equipment
     });
   };
 
@@ -54,6 +71,20 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
           name="position"
           id="position"
         />
+      </div>
+
+      <div className="control">
+        <label htmlFor="equipment">Equipment:</label>
+        <select
+          value={equipment}
+          onChange={(e) => setEquipment(e.target.value)}
+          name="equipment"
+          id="equipment">
+          <option key="none" value="none" id="none">none</option>
+          {options.map((option)=>{ 
+            return <option key={option._id} value={option.name} id={option._id}>{option.name}</option>
+          })}
+        </select>
       </div>
 
       <div className="buttons">
