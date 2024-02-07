@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import Loading from "../Components/Loading";
 import EmployeeTable from "../Components/EmployeeTable";
 
@@ -22,10 +23,12 @@ const EmployeeList = () => {
   const [employees, setEmployees] = useState(null);
   const [filterInput, setFilterInput] = useState("");
   const [sortExpr, setSortExpr] = useState("none");
-
   const [inputPosOrLevel, setInputPosOrLevel] = useState("");
+  const [missing, setMissing] = useState([]);
 
   const { search } = useParams();
+  const navigate = useNavigate();
+  
 
   const handleDelete = (id) => {
     deleteEmployee(id);
@@ -36,7 +39,6 @@ const EmployeeList = () => {
   };
 
   useEffect(() => {
-    
     if (search){
       fetchSearchEmployees(search)
       .then((employees) => {
@@ -48,6 +50,7 @@ const EmployeeList = () => {
       .then((employees) => {
         setLoading(false);
         setEmployees(employees);
+        setMissing(employees);
       })
     }
   }, [search]);
@@ -90,6 +93,10 @@ const EmployeeList = () => {
     setSortExpr(event.target.value);
   }
 
+  const goToMissingList = () => {
+    navigate('/missing', { state: missing });
+  }
+  
   if (loading) {
     return <Loading />;
   }
@@ -116,7 +123,11 @@ const EmployeeList = () => {
             <option value="level">Level</option>
           </select>
       </div>
-      <EmployeeTable employees={sortBySelected(filterPosOrLevel(employees, filterInput), sortExpr)} onDelete={handleDelete} />
+      <div>
+        <button onClick={goToMissingList}>Missing list</button>
+      </div>
+      <EmployeeTable employees={sortBySelected(filterPosOrLevel(employees, filterInput), sortExpr)}
+        onDelete={handleDelete} missing={missing} setMissing={setMissing} disableButtons={false}/>
     </div>
   );
 };
