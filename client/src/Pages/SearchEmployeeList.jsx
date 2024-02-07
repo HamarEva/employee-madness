@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import { useNavigate } from 'react-router-dom';
 import Loading from "../Components/Loading";
 import EmployeeTable from "../Components/EmployeeTable";
 
-const fetchEmployees = () => {
-  return fetch("/api/employees").then((res) => res.json());
-};
 
+const fetchSearchEmployees = (search) => {
+  return fetch(`/api/employees/search/${search}`).then((res) => res.json())
+};
 
 const deleteEmployee = (id) => {
   return fetch(`/api/employees/${id}`, { method: "DELETE" }).then((res) =>
@@ -15,17 +15,15 @@ const deleteEmployee = (id) => {
   );
 };
 
-const EmployeeList = () => {
+const SearchEmployeeList = () => {
   const [loading, setLoading] = useState(true);
   const [employees, setEmployees] = useState(null);
   const [filterInput, setFilterInput] = useState("");
   const [sortExpr, setSortExpr] = useState("none");
   const [inputPosOrLevel, setInputPosOrLevel] = useState("");
-  const [missing, setMissing] = useState([]);
-
-  
-  const navigate = useNavigate();
-  
+ 
+  const { search } = useParams();
+ 
 
   const handleDelete = (id) => {
     deleteEmployee(id);
@@ -37,14 +35,13 @@ const EmployeeList = () => {
 
   useEffect(() => {
     
-      fetchEmployees()
+      fetchSearchEmployees(search)
       .then((employees) => {
         setLoading(false);
         setEmployees(employees);
-        setMissing(employees);
       })
-    
-  }, []);
+
+  }, [search]);
 
   const filterPosOrLevel = (employees, filterInput)=>{
     const filteredEmployees = employees.filter(employee => {
@@ -58,24 +55,11 @@ const EmployeeList = () => {
     setFilterInput(event.target.value.toLowerCase());
   }
 
-  const convertName = name => {
-    const names = name.split(" ")
-    const nameObject = {
-      first: names[0],
-      middle: names.slice(1, -1).join(" "),
-      last: names[names.length-1]
-    }
-    return nameObject
-  }
-
   const sortBySelected = (employees, sortExpr)=>{
     if (sortExpr === "none"){
       return employees
-    } else if (sortExpr === "level" || sortExpr === "position"){
-      const sortedEmployees = [...employees].sort((a,b) => a[sortExpr].localeCompare(b[sortExpr]));
-      return sortedEmployees
     } else {
-      const sortedEmployees = [...employees].sort((a,b) => convertName(a.name)[sortExpr].localeCompare(convertName(b.name)[sortExpr]))
+      const sortedEmployees = [...employees].sort((a,b) => a[sortExpr].localeCompare(b[sortExpr]));
       return sortedEmployees
     }
   }
@@ -84,10 +68,6 @@ const EmployeeList = () => {
     setSortExpr(event.target.value);
   }
 
-  const goToMissingList = () => {
-    navigate('/missing', { state: missing });
-  }
-  
   if (loading) {
     return <Loading />;
   }
@@ -107,20 +87,16 @@ const EmployeeList = () => {
           <label >Sort Employees By: </label>
           <select onChange={sortEmployees}>
             <option value="none">None</option>
-            <option value="first">First name</option>
-            <option value="middle">Middle name</option>
-            <option value="last">Last name</option>
+            
             <option value="position">Position</option>
             <option value="level">Level</option>
           </select>
       </div>
-      <div>
-        <button onClick={goToMissingList}>Missing list</button>
-      </div>
+      
       <EmployeeTable employees={sortBySelected(filterPosOrLevel(employees, filterInput), sortExpr)}
-        onDelete={handleDelete} missing={missing} setMissing={setMissing} disableButtons={false}/>
+        onDelete={handleDelete} disableButtons={true}/>
     </div>
   );
 };
 
-export default EmployeeList;
+export default SearchEmployeeList;

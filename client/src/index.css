@@ -16,16 +16,18 @@ button {
   padding: 0.2rem 1rem;
   margin: 0.1rem;
   font-weight: bold;
-  color: black;
+  
   text-transform: uppercase;
   outline: rgb(99, 151, 254);
   border-radius: 4px;
-  cursor: pointer;
+  
   background-color: white;
 }
 
-button:hover {
+button:not([disabled]):hover {
+  color: black;
   border-color: rgb(99, 151, 254);
+  cursor: pointer;
 }
 
 a {
