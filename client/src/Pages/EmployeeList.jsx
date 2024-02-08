@@ -94,28 +94,33 @@ const EmployeeList = () => {
 
   return (
     <div>
-      <div className="filter">
-          <label >Filter Position or Level: </label>
-          <input
-            type="text"
-            placeholder="Search Position or Level"
-            value={inputPosOrLevel}
-            onChange={searchPosOrLevel}
-          />
-      </div>
-      <div className="sort">
-          <label >Sort Employees By: </label>
-          <select onChange={sortEmployees}>
-            <option value="none">None</option>
-            <option value="first">First name</option>
-            <option value="middle">Middle name</option>
-            <option value="last">Last name</option>
-            <option value="position">Position</option>
-            <option value="level">Level</option>
-          </select>
-      </div>
-      <div>
+      <div className="arrange">
+        <div className="filter&sort">
+        <div className="filter">
+            <label >Filter Position or Level: </label>
+            <input
+              type="text"
+              placeholder="Search Position or Level"
+              value={inputPosOrLevel}
+              onChange={searchPosOrLevel}
+            />
+        </div>
+        <div className="sort">
+            <label >Sort Employees By: </label>
+            <select onChange={sortEmployees}>
+              <option value="none">None</option>
+              <option value="first">First name</option>
+              <option value="middle">Middle name</option>
+              <option value="last">Last name</option>
+              <option value="position">Position</option>
+              <option value="level">Level</option>
+            </select>
+        </div>
+        </div>
+      
+      <div className="missing">
         <button onClick={goToMissingList}>Missing list</button>
+      </div>
       </div>
       <EmployeeTable employees={sortBySelected(filterPosOrLevel(employees, filterInput), sortExpr)}
         onDelete={handleDelete} missing={missing} setMissing={setMissing} disableButtons={false}/>

@@ -100,6 +100,28 @@ button {
   margin-right: 1rem;
 }
 
+button.page {
+  padding: 0.2rem 0.5rem;
+}
+
+button.activePage {
+  padding: 0.2rem 0.5rem;
+}
+
 .grow {
   flex: 1;
+}
+
+.missing {
+  text-align: right;
+  display: flex;
+}
+
+.missing button {
+  margin-left: auto;
+}
+
+.arrange {
+  display:block;
+  box-sizing: border-box;
 }
