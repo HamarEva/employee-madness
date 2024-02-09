@@ -11,6 +11,10 @@ const EmployeeSchema = new Schema({
     type: String,
     default: "none",
   },
+  brand: {
+    type: Schema.Types.ObjectId,
+    ref: 'Brand'
+  },
   created: {
     type: Date,
     default: Date.now,

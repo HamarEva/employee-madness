@@ -4,32 +4,44 @@ const fetchEquipment = () => {
   return fetch("/api/equipment").then((res) => res.json());
 };
 
+const fetchBrands = () => {
+  return fetch("/api/brands").then((res) => res.json());
+};
+
 const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
   const [name, setName] = useState(employee?.name ?? "");
   const [level, setLevel] = useState(employee?.level ?? "");
   const [position, setPosition] = useState(employee?.position ?? "none");
   const [equipment, setEquipment] = useState(employee?.equipment ?? "none");
-  const [options, setOptions] = useState([]);
+  const [brand, setBrand] = useState(employee?.brand ?? "65c4c18fe9598482b972ad01");
+  const [equipOptions, setEquipOptions] = useState([]);
+  const [brandOptions, setBrandOptions] = useState([]);
   
   useEffect(() => {
     
     fetchEquipment()
     .then((equipment) => {
-      setOptions(equipment)
+      setEquipOptions(equipment)
     })
-  
+
+    fetchBrands()
+    .then((brands) => {
+      setBrandOptions(brands)
+    })
+
   }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(equipment);
+
     if (employee) {
       return onSave({
         ...employee,
         name,
         level,
         position,
-        equipment
+        equipment,
+        brand
       });
     }
 
@@ -37,7 +49,8 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
       name,
       level,
       position,
-      equipment
+      equipment,
+      brand
     });
   };
 
@@ -81,8 +94,21 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
           name="equipment"
           id="equipment">
           <option key="none" value="none" id="none">none</option>
-          {options.map((option)=>{ 
+          {equipOptions.map((option)=>{ 
             return <option key={option._id} value={option.name} id={option._id}>{option.name}</option>
+          })}
+        </select>
+      </div>
+
+      <div className="control">
+        <label htmlFor="brand">Fav brand:</label>
+        <select
+          value={brand}
+          onChange={(e) => setBrand(e.target.value)}
+          name="brand"
+          id="brand">
+          {brandOptions.map((option)=>{ 
+            return <option key={option._id} value={option._id} id={option._id}>{option.name}</option>
           })}
         </select>
       </div>

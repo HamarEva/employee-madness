@@ -33,6 +33,10 @@ const EmployeeList = () => {
     setEmployees((employees) => {
       return employees.filter((employee) => employee._id !== id);
     });
+
+    setMissing((missing) => {
+      return missing.filter((employee) => employee._id !== id);
+    })
   };
 
   useEffect(() => {
