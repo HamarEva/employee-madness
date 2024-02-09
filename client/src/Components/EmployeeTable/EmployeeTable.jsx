@@ -6,13 +6,22 @@ const fetchEmployeeById = (id) => {
   return fetch(`/api/employees/${id}`).then((res) => res.json());
 };
 
+const sortEmployees = (employees, dir) => {
+  const returnEmployees = [...employees]
+  return dir === "asc" ? returnEmployees.sort((a,b) => a.name.localeCompare(b.name))
+  : dir === "desc" ? returnEmployees.sort((b,a) => a.name.localeCompare(b.name))
+  : returnEmployees
+}
+
 const EmployeeTable = ({ employees, onDelete, missing, setMissing, disableButtons }) => {
+
+  const [sortDir, setSortDir] = useState("none");
 
   const [currentPage, setCurrentPage] = useState(1);
   const emplPerPage = 10;
   const lastIndex = currentPage * emplPerPage;
   const firstIndex = lastIndex - emplPerPage;
-  const empls = employees.slice(firstIndex, lastIndex);
+  const empls = sortEmployees(employees, sortDir).slice(firstIndex, lastIndex);
   const nPage = Math.ceil(employees.length/emplPerPage);
   const numbers = [...Array(nPage+1).keys()].slice(1);
 
@@ -30,13 +39,21 @@ const EmployeeTable = ({ employees, onDelete, missing, setMissing, disableButton
     setMissing(newMissing)
   }
   
+  const orderList = () => {
+    if (sortDir === "none" || sortDir === "desc") {
+      setSortDir("asc")
+    } else {
+      setSortDir("desc")
+    }
+  }
+
   return (
   <div>
   <div className="EmployeeTable">
     <table>
       <thead>
         <tr>
-          <th>Name</th>
+          <th onClick={orderList}>Name</th>
           <th>Level</th>
           <th>Position</th>
           <th>Fav Brand</th>
