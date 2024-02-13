@@ -14,6 +14,7 @@ import EquipmentUpdater from "./Pages/EquipmentUpdater";
 import MissingList from "./Pages/MissingList.jsx";
 import SearchEmployeeList from "./Pages/SearchEmployeeList.jsx";
 import Kittens from "./Pages/Kittens.jsx";
+import TopPaidList from "./Pages/TopPaid.jsx";
 
 import "./index.css";
 import TableTest from "./Pages/TableTest";
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
       {
         path: "/kittens/:employeeId",
         element: <Kittens />,
+      },
+      {
+        path: "/top-paid",
+        element: <TopPaidList />,
       },
     ],
   },

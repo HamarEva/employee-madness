@@ -14,6 +14,7 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
   const [position, setPosition] = useState(employee?.position ?? "none");
   const [equipment, setEquipment] = useState(employee?.equipment ?? "none");
   const [brand, setBrand] = useState(employee?.brand ?? "65c4c18fe9598482b972ad01");
+  const [salary, setSalary] = useState(employee?.salary ?? 0);
   const [equipOptions, setEquipOptions] = useState([]);
   const [brandOptions, setBrandOptions] = useState([]);
   
@@ -41,7 +42,8 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
         level,
         position,
         equipment,
-        brand
+        brand,
+        salary
       });
     }
 
@@ -50,7 +52,8 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
       level,
       position,
       equipment,
-      brand
+      brand,
+      salary
     });
   };
 
@@ -111,6 +114,17 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
             return <option key={option._id} value={option._id} id={option._id}>{option.name}</option>
           })}
         </select>
+      </div>
+
+      <div className="control">
+        <label htmlFor="salary">Salary:</label>
+        <input
+          value={salary}
+          type="number"
+          onChange={(e) => setSalary(e.target.value)}
+          name="salary"
+          id="salary"
+        />
       </div>
 
       <div className="buttons">

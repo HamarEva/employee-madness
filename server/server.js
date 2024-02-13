@@ -21,6 +21,11 @@ app.get("/api/employees/", async (req, res) => {
   return res.json(employees);
 });
 
+app.get("/api/employees/toppaid", async (req, res) => {
+  const employees = await EmployeeModel.find().sort({ salary: "desc" });
+  return res.json(employees);
+});
+
 app.get("/api/employees/:id", async (req, res) => {
   const employee = await EmployeeModel.findById(req.params.id);
   return res.json(employee);

@@ -20,6 +20,7 @@ if (!mongoUrl) {
 }
 
 const pick = (from) => from[Math.floor(Math.random() * (from.length - 0))];
+const pickSalary = () => Math.floor(Math.random() * 41)+ 20
 
 const populateBrands = async () => {
   await BrandModel.deleteMany({});
@@ -65,12 +66,26 @@ const populateEmployees = async () => {
 
 };
 
+const populateSalary = async () => {
+  try {
+    const employees = await EmployeeModel.find({});
+    for (const employee of employees) {
+      const randomSalary = pickSalary();
+      await EmployeeModel.updateOne({ _id: employee._id }, { $set: { salary: randomSalary } });
+    }
+    console.log('Employees updated successfully');
+  } catch (error) {
+    console.error('Error updating employees:', error);
+  }
+};
+
 const main = async () => {
   await mongoose.connect(mongoUrl);
 
   //await populateBrands();
   //await populateEmployees();
-  await populateKittens();
+  //await populateKittens();
+  await populateSalary();
 
   await mongoose.disconnect();
 };
