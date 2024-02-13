@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const EmployeeModel = require("./db/employee.model");
 const EquipmentModel = require("./db/equipment.model");
 const BrandModel = require("./db/brand.model");
-const KittenModel = require("./db/kitten.model")
+const KittenModel = require("./db/kitten.model");
+const LocationModel = require("./db/location.model");
 
 const { MONGO_URL, PORT = 8080 } = process.env;
 
@@ -140,6 +141,15 @@ app.get("/api/employees/search/:search", async (req, res) => {
 app.get("/api/brands/", async (req, res) => {
   const brands = await BrandModel.find().sort({ created: "desc" });
   return res.json(brands);
+});
+
+app.get("/api/locations/", async (req, res) => {
+  try{
+  const locs = await LocationModel.find().sort({ created: "desc" });
+  return res.json(locs);
+  } catch(error){
+    console.error(error);
+  }
 });
 
 app.get("/api/kittens/:employeeId", async (req, res, next) => {

@@ -7,10 +7,12 @@ const names = require("./names.json");
 const levels = require("./levels.json");
 const positions = require("./positions.json");
 const brands = require("./brands.json");
-const kittens = require("./kittens.json")
+const kittens = require("./kittens.json");
+const locations = require("./locations.json")
 const EmployeeModel = require("../db/employee.model");
 const BrandModel = require("../db/brand.model");
 const KittenModel = require("../db/kitten.model");
+const LocationModel = require("../db/location.model");
 
 const mongoUrl = process.env.MONGO_URL;
 
@@ -31,6 +33,18 @@ const populateBrands = async () => {
 
   await BrandModel.create(...favBrands);
   console.log("Brands created");
+}
+
+const populateLocations = async () => {
+  //await LocationModel.deleteMany({});
+
+  const locat = locations.map((loc)=> (
+    {city: loc.city,
+    country: loc.country}
+  ))
+
+  await LocationModel.create(...locat);
+  console.log("Locations created");
 }
 
 const populateKittens = async () => {
@@ -85,7 +99,8 @@ const main = async () => {
   //await populateBrands();
   //await populateEmployees();
   //await populateKittens();
-  await populateSalary();
+  //await populateSalary();
+  await populateLocations();
 
   await mongoose.disconnect();
 };

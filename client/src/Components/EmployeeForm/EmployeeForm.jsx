@@ -8,6 +8,10 @@ const fetchBrands = () => {
   return fetch("/api/brands").then((res) => res.json());
 };
 
+const fetchLocs = () => {
+  return fetch("/api/locations").then((res) => res.json());
+};
+
 const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
   const [name, setName] = useState(employee?.name ?? "");
   const [level, setLevel] = useState(employee?.level ?? "");
@@ -17,6 +21,8 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
   const [salary, setSalary] = useState(employee?.salary ?? 0);
   const [equipOptions, setEquipOptions] = useState([]);
   const [brandOptions, setBrandOptions] = useState([]);
+  const [location, setLocation] = useState(employee?.location ?? "65cb6206f1f02e8bc83ec507");
+  const [locatOptions, setLocatOptions] = useState([]);
   
   useEffect(() => {
     
@@ -30,6 +36,11 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
       setBrandOptions(brands)
     })
 
+    fetchLocs()
+    .then((locs) => {
+      setLocatOptions(locs)
+    }).catch(error => console.error(error))
+      
   }, []);
 
   const onSubmit = (e) => {
@@ -43,7 +54,8 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
         position,
         equipment,
         brand,
-        salary
+        salary,
+        location
       });
     }
 
@@ -53,7 +65,8 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
       position,
       equipment,
       brand,
-      salary
+      salary,
+      location
     });
   };
 
@@ -125,6 +138,19 @@ const EmployeeForm = ({ onSave, disabled, employee, onCancel }) => {
           name="salary"
           id="salary"
         />
+      </div>
+
+      <div className="control">
+        <label htmlFor="locat">Location city:</label>
+        <select
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          name="locat"
+          id="locat">
+          {locatOptions.map((option)=>{ 
+            return <option key={option._id} value={option._id} id={option._id}>{option.city}</option>
+          })}
+        </select>
       </div>
 
       <div className="buttons">

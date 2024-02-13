@@ -16,6 +16,10 @@ const EmployeeSchema = new Schema({
     ref: 'Brand'
   },
   salary: Number,
+  location:  {
+    type: Schema.Types.ObjectId,
+    ref: 'Location'
+  },
   created: {
     type: Date,
     default: Date.now,
