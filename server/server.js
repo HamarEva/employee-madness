@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const EmployeeModel = require("./db/employee.model");
 const EquipmentModel = require("./db/equipment.model");
 const BrandModel = require("./db/brand.model");
+const KittenModel = require("./db/kitten.model")
 
 const { MONGO_URL, PORT = 8080 } = process.env;
 
@@ -59,10 +60,24 @@ app.delete("/api/employees/:id", async (req, res, next) => {
   }
 });
 
-app.get("/api/equipment/", async (req, res) => {
+/* app.get("/api/equipment/", async (req, res) => {
   const equipment = await EquipmentModel.find().sort({ created: "desc" });
   return res.json(equipment);
+}); */
+
+app.get("/api/equipment/", async (req, res) => {
+  try {
+    const equipment = await EquipmentModel.find().sort({ created: "desc" });
+    if (!equipment) {
+      return res.status(404).json({ error: "Equipment not found" });
+    }
+    return res.json(equipment);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 });
+
 
 app.get("/api/equipment/:id", async (req, res) => {
   const equipment = await EquipmentModel.findById(req.params.id);
@@ -110,14 +125,40 @@ app.get("/api/employees/search/:search", async (req, res) => {
       { name: { $regex: new RegExp(search, "i") } }
     ]
   }
-  
-  const employees = await EmployeeModel.find(searchExpression);
+  //const orderExpression = {  name: "asc" };
+  //const orderExpression = {  ["name"]: "asc" };
+  const employees = await EmployeeModel.find(searchExpression)
+  //.sort (orderExpression)
   return res.json(employees);
 });
 
 app.get("/api/brands/", async (req, res) => {
   const brands = await BrandModel.find().sort({ created: "desc" });
   return res.json(brands);
+});
+
+app.get("/api/kittens/:employeeId", async (req, res, next) => {
+  try {
+    const emplId = req.params.employeeId;
+    
+    const kittens = await KittenModel.find({ employee: emplId });
+    
+    return res.json(kittens);
+  } catch (err) {
+    console.error(err);
+    return next(err);
+  }
+});
+
+app.post("/api/kittens/", async (req, res, next) => {
+  const kitten = req.body;
+
+  try {
+    const saved = await KittenModel.create(kitten);
+    return res.json(saved);
+  } catch (err) {
+    return next(err);
+  }
 });
 
 const main = async () => {

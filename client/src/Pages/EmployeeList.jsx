@@ -4,15 +4,40 @@ import { useNavigate } from 'react-router-dom';
 import Loading from "../Components/Loading";
 import EmployeeTable from "../Components/EmployeeTable";
 
-const fetchEmployees = () => {
+/* const fetchEmployees = () => {
   return fetch("/api/employees").then((res) => res.json());
+}; */
+
+const fetchEmployees = () => {
+  return fetch("/api/employees")
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`Response was not ok! Status: ${res.status}`);
+      }
+      return res.json();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
-
-const deleteEmployee = (id) => {
+/* const deleteEmployee = (id) => {
   return fetch(`/api/employees/${id}`, { method: "DELETE" }).then((res) =>
     res.json()
   );
+}; */
+
+const deleteEmployee = (id) => {
+  return fetch(`/api/employees/${id}`, { method: "DELETE" })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`Response was not ok! Status: ${res.status}`);
+      }
+      return res.json();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 const EmployeeList = () => {

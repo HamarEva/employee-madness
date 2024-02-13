@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import "./EmployeeTable.css";
+import { useNavigate } from "react-router-dom";
 
 const fetchEmployeeById = (id) => {
   return fetch(`/api/employees/${id}`).then((res) => res.json());
@@ -14,6 +15,7 @@ const sortEmployees = (employees, dir) => {
 }
 
 const EmployeeTable = ({ employees, onDelete, missing, setMissing, disableButtons }) => {
+  const navigate = useNavigate();
 
   const [sortDir, setSortDir] = useState("none");
 
@@ -47,6 +49,11 @@ const EmployeeTable = ({ employees, onDelete, missing, setMissing, disableButton
     }
   }
 
+  const goToKittens = event => {
+    console.log(event.target.dataset.id);
+    navigate(`/kittens/${event.target.dataset.id}`)
+  }
+
   return (
   <div>
   <div className="EmployeeTable">
@@ -73,6 +80,9 @@ const EmployeeTable = ({ employees, onDelete, missing, setMissing, disableButton
               </Link>
               <button type="button" onClick={() => onDelete(employee._id)} disabled={disableButtons}>
                 Delete
+              </button>
+              <button type="kitten" data-id={employee._id} onClick={goToKittens}>
+                Kittens list
               </button>
               <input type="checkbox" value={employee._id} onChange={handleCheck} disabled={disableButtons}></input>
             </td>

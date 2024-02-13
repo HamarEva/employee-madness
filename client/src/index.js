@@ -13,6 +13,7 @@ import EquipmentCreator from "./Pages/EquipmentCreator";
 import EquipmentUpdater from "./Pages/EquipmentUpdater";
 import MissingList from "./Pages/MissingList.jsx";
 import SearchEmployeeList from "./Pages/SearchEmployeeList.jsx";
+import Kittens from "./Pages/Kittens.jsx";
 
 import "./index.css";
 import TableTest from "./Pages/TableTest";
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
       {
         path: "/missing",
         element: <MissingList />,
+      },
+      {
+        path: "/kittens/:employeeId",
+        element: <Kittens />,
       },
     ],
   },
